@@ -56,7 +56,8 @@ public class Board {
                     continue;
                 }
                 if (piece.getName() == PieceName.KING && piece.getAlliance() == alliance) {
-                    return piece.getPosition();
+                    Position p = new Position(piece.getPosition().getX(), piece.getPosition().getY());
+                    return p;
                 }
             }
         }
@@ -64,7 +65,8 @@ public class Board {
     }
 
     public boolean IsChecked(Alliance alliance) {
-
+        
+        Position king = getKingPosition(alliance);
         for (int x = 0; x < 8; x++) {
             for (int y = 0; y < 8; y++) {
                 Piece piece = tiles[x][y].getPiece();
@@ -75,7 +77,7 @@ public class Board {
                     continue;
                 }
                 for (Move move : piece.showAllAvailableMoves(this)) {
-                    if (move.getEndPosition().equals(getKingPosition(alliance))) {
+                    if (move.getEndPosition().equals(king)) {
                         return true;
                     }
                 }
@@ -97,7 +99,7 @@ public class Board {
                 for (Move move : piece.showAllAvailableMoves(this)) {
                     boolean whiteTurn = true;
                     if(alliance == Alliance.BLACK) whiteTurn = false;
-                    if (move.executeMove(this, whiteTurn)) {
+                    if (move.executeMove(this, whiteTurn, true)) {
                         return false;
                     }
                 }

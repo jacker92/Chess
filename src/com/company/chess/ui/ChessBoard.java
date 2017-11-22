@@ -69,10 +69,12 @@ public class ChessBoard extends BorderPane {
             Move move = new Move(spaces[start.getX()][start.getY()].getPiece(), start, new Position(xVal, yVal));
             Piece piece = spaces[start.getX()][start.getY()].getPiece();
             if (piece.isLegalMove(move, board)) {
+                System.out.println("legalize");
                 if ((game.isWhiteTurn() && piece.getAlliance() == Alliance.WHITE) || (!game.isWhiteTurn() && piece.getAlliance() == Alliance.BLACK)) {
                   
-                  
-                    if(game.movePiece(move)) {
+                    System.out.println("is legal move\n");
+                    if(game.movePiece(move, false)) {
+                        System.out.println("seleaösdklfjasödkflj");
                         statusLabel.setText("Select piece to be moved");
                         movePieceOnScreen(move);
                         
@@ -85,7 +87,9 @@ public class ChessBoard extends BorderPane {
                     } 
                     checkForCheckedAndMateOptions();
                 }   
-            } 
+            } else {
+                System.out.println("is not legal move");
+            }
              this.selected = false;
              
         }

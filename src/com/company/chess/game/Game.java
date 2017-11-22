@@ -29,8 +29,8 @@ public class Game {
         this.whiteTurn = whiteTurn;
     }
 
-    public boolean movePiece(Move move) {
-        if (move.executeMove(board, whiteTurn)) {
+    public boolean movePiece(Move move, boolean testing) {
+        if (move.executeMove(board, whiteTurn, testing)) {
             whiteTurn = !whiteTurn;
             return true;
         }

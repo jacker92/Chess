@@ -7,58 +7,65 @@ import com.company.chess.pieces.Position;
 import java.util.Objects;
 
 public class Move {
-    
+
     private Piece piece;
     private Position endPosition;
     private Position startPosition;
-    
+
     public Move(Piece piece, Position startPosition, Position endPosition) {
         this.piece = piece;
         this.endPosition = endPosition;
         this.startPosition = startPosition;
     }
-    
-    public boolean executeMove(Board board, boolean whiteTurn) {
-        if(whiteTurn) {
-        if(board.getTiles()[startPosition.getX()][startPosition.getY()].getPiece().getAlliance() == Alliance.BLACK) {
-            return false;
-        }
+
+    public boolean executeMove(Board board, boolean whiteTurn, boolean testing) {
+        if (whiteTurn) {
+            if (board.getTiles()[startPosition.getX()][startPosition.getY()].getPiece().getAlliance() == Alliance.BLACK) {
+                return false;
+            }
         } else {
-            if(board.getTiles()[startPosition.getX()][startPosition.getY()].getPiece().getAlliance() == Alliance.WHITE) {
+            if (board.getTiles()[startPosition.getX()][startPosition.getY()].getPiece().getAlliance() == Alliance.WHITE) {
                 return false;
             }
         }
-        
-        if(board.getTiles()[startPosition.getX()][startPosition.getY()].getPiece() == null) {
+
+        if (board.getTiles()[startPosition.getX()][startPosition.getY()].getPiece() == null) {
             return false;
-        } 
-        
+        }
+
         Piece piece = board.getTiles()[startPosition.getX()][startPosition.getY()].getPiece();
         Piece newPiece = board.getTiles()[endPosition.getX()][endPosition.getY()].getPiece();
-        
+
         piece.setPosition(endPosition);
         board.getTiles()[endPosition.getX()][endPosition.getY()].setPiece(piece);
         board.getTiles()[startPosition.getX()][startPosition.getY()].setPiece(null);
-        
+
         // Then check if it is check after moving
         if ((whiteTurn && board.IsChecked(Alliance.WHITE)) || (!whiteTurn && board.IsChecked(Alliance.BLACK))) {
-                // REVERSE ACTIONS 
-                board.getTiles()[startPosition.getX()][startPosition.getY()].setPiece(piece);
-                board.getTiles()[endPosition.getX()][endPosition.getY()].setPiece(newPiece);
-                piece.setPosition(startPosition);
-                return false;
+            // REVERSE ACTIONS 
+            piece.setPosition(startPosition);
+            board.getTiles()[startPosition.getX()][startPosition.getY()].setPiece(piece);
+            board.getTiles()[endPosition.getX()][endPosition.getY()].setPiece(newPiece);
+            return false;
         }
-        
+
+        // If only testing for check or checkmate, undo actions
+        if (testing) {
+            piece.setPosition(startPosition);
+            board.getTiles()[startPosition.getX()][startPosition.getY()].setPiece(piece);
+            board.getTiles()[endPosition.getX()][endPosition.getY()].setPiece(newPiece);
+        }
+
         return true;
     }
-    
+
     public String toString() {
         return piece.getName() + ", " + startPosition + ", " + endPosition;
     }
-    
+
     public Move setPieceName(PieceName name) {
-      piece.setName(name);
-      return this;
+        piece.setName(name);
+        return this;
     }
 
     public Piece getPiece() {
@@ -69,7 +76,7 @@ public class Move {
         this.piece = piece;
         return this;
     }
-    
+
     public Position getEndPosition() {
         return endPosition;
     }
@@ -107,10 +114,5 @@ public class Move {
         }
         return true;
     }
-    
-    
-    
-    
-    
 
 }

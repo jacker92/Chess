@@ -23,7 +23,7 @@ public class King extends Piece {
             int possibleX = currentX+MovesBank.kingPositions[i].getX();
             int possibleY = currentY+MovesBank.kingPositions[i].getY();
             
-            if(possibleX < 0 ||possibleX > 7 ||
+            if(possibleX < 0 || possibleX > 7 ||
             possibleY < 0 || possibleY > 7 ) {
                 continue;
             }
