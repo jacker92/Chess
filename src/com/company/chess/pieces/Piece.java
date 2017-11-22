@@ -57,9 +57,7 @@ public abstract class Piece {
             if (xmove.equals(move)) {
                 return true;
             }
-
         }
-
         return false;
     }
 

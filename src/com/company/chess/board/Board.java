@@ -80,7 +80,6 @@ public class Board {
                     }
                 }
             }
-
         }
         return false;
     }
@@ -92,11 +91,13 @@ public class Board {
                 if (piece == null) {
                     continue;
                 }
-                if (piece.getAlliance() == alliance) {
+                if (piece.getAlliance() != alliance) {
                     continue;
                 }
                 for (Move move : piece.showAllAvailableMoves(this)) {
-                    if (move.executeMove(this, true)) {
+                    boolean whiteTurn = true;
+                    if(alliance == Alliance.BLACK) whiteTurn = false;
+                    if (move.executeMove(this, whiteTurn)) {
                         return false;
                     }
                 }

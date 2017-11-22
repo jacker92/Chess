@@ -9,18 +9,31 @@ import com.company.chess.pieces.Piece;
 import com.company.chess.pieces.PieceName;
 import com.company.chess.pieces.Position;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 
-public class ChessBoard extends GridPane {
+public class ChessBoard extends BorderPane {
 
     public Space[][] spaces = new Space[8][8];
     private Board board;
     private boolean selected;
     private Position start;
     private Game game;
+    private Label turnLabel;
+    private Label statusLabel;
+    private HBox box;
+    private GridPane pane;
+    
 
     public ChessBoard() {
 
+        this.pane = new GridPane();
+        this.turnLabel = new Label("Turn: White");
+        this.statusLabel = new Label("Select piece to be moved");
+        this.box = new HBox();
+        
         board = new Board();
         this.game = new Game(board);
 
@@ -30,7 +43,7 @@ public class ChessBoard extends GridPane {
                 boolean light = ((x + y) % 2 != 0); // checkerboard space colors
                 spaces[x][y] = new Space(light, x, y);
 
-                this.add(spaces[x][y], x, y);
+                pane.add(spaces[x][y], x, y);
 
                 // These have to be final for lambda expression
                 final int xVal = x;
@@ -49,10 +62,8 @@ public class ChessBoard extends GridPane {
             if (spaces[xVal][yVal].getPiece() == null) {
                 return;
             }
-            System.out.println("selected " + spaces[xVal][yVal].getPiece().getName());
+            statusLabel.setText("selected " + spaces[xVal][yVal].getPiece().getName());
             this.start = new Position(xVal, yVal);
-            System.out.println(start);
-            System.out.println("Select destination");
             this.selected = true;
         } else {
             Move move = new Move(spaces[start.getX()][start.getY()].getPiece(), start, new Position(xVal, yVal));
@@ -62,29 +73,38 @@ public class ChessBoard extends GridPane {
                   
                   
                     if(game.movePiece(move)) {
-                        movePiece(move);
-                          System.out.println("Piece moved.");
-                    } else {
-                        System.out.println("It is not legal move.");
-                    }
-                       if(board.IsChecked(Alliance.BLACK)) {
-                           if(board.IsCheckMated(Alliance.BLACK)) {
-                             new Alert(Alert.AlertType.INFORMATION, "Black is checkmated!").showAndWait(); 
-                             System.exit(0);
-                           }
-                      
-                    } else if (board.IsChecked(Alliance.WHITE)) {
-                        if (board.IsCheckMated(Alliance.WHITE)) {
-                             new Alert(Alert.AlertType.INFORMATION, "White is checkmated!").showAndWait(); 
-                             System.exit(0);
+                        statusLabel.setText("Select piece to be moved");
+                        movePieceOnScreen(move);
+                        
+                        // Change label
+                        if(game.isWhiteTurn()) {
+                            turnLabel.setText("Turn: White");
+                        } else {
+                            turnLabel.setText("Turn: Black");
                         }
-                    }
-                } 
-               
-            } else {
-                System.out.println("It is not legal move.");
-            }
+                    } 
+                    checkForCheckedAndMateOptions();
+                }   
+            } 
              this.selected = false;
+             
+        }
+    }
+
+    private void checkForCheckedAndMateOptions() {
+        if(board.IsChecked(Alliance.BLACK)) {
+            statusLabel.setText("Black is in check");
+            if(board.IsCheckMated(Alliance.BLACK)) {
+                new Alert(Alert.AlertType.INFORMATION, "Black is checkmated!").showAndWait();
+                System.exit(0);
+            }
+            
+        } else if (board.IsChecked(Alliance.WHITE)) {
+            statusLabel.setText("White is in check");
+            if (board.IsCheckMated(Alliance.WHITE)) {
+                new Alert(Alert.AlertType.INFORMATION, "White is checkmated!").showAndWait();
+                System.exit(0);
+            }
         }
     }
 
@@ -94,9 +114,18 @@ public class ChessBoard extends GridPane {
                 spaces[x][y].setPiece(board.getTiles()[x][y].getPiece());
             }
         }
+        
+        // Add Labels and gridpane to root
+        this.setCenter(pane);
+        box.getChildren().add(turnLabel);
+        box.getChildren().add(statusLabel);
+        box.setSpacing(20);
+        
+        this.setTop(box);
     }
 
-    private void movePiece(Move move) {
+ 
+    private void movePieceOnScreen(Move move) {
         // Remove piece from original position
         spaces[move.getStartPosition().getX()][move.getStartPosition().getY()].setPiece(null);
         // Set piece to new location
@@ -112,5 +141,4 @@ public class ChessBoard extends GridPane {
            spaces[move.getEndPosition().getX()][move.getEndPosition().getY()].setPiece(pwn);
         }
     }
-
 }
