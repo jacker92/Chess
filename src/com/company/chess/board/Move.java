@@ -34,9 +34,21 @@ public class Move {
         } 
         
         Piece piece = board.getTiles()[startPosition.getX()][startPosition.getY()].getPiece();
-        piece.setPosition(new Position(endPosition.getX(), endPosition.getY()));
+        Piece newPiece = board.getTiles()[endPosition.getX()][endPosition.getY()].getPiece();
+        
+        piece.setPosition(endPosition);
         board.getTiles()[endPosition.getX()][endPosition.getY()].setPiece(piece);
         board.getTiles()[startPosition.getX()][startPosition.getY()].setPiece(null);
+        
+        // Then check if it is check after moving
+        if ((whiteTurn && board.IsChecked(Alliance.WHITE)) || (!whiteTurn && board.IsChecked(Alliance.BLACK))) {
+                // REVERSE ACTIONS 
+                board.getTiles()[startPosition.getX()][startPosition.getY()].setPiece(piece);
+                board.getTiles()[endPosition.getX()][endPosition.getY()].setPiece(newPiece);
+                piece.setPosition(startPosition);
+                return false;
+        }
+        
         return true;
     }
     

@@ -14,7 +14,7 @@ public class ChessLayout extends Application {
       GridPane root = new ChessBoard();
 
         Scene scene = new Scene(root, 400, 400);
-        scene.getStylesheets().add("chesslayout/stylesheet.css");
+        scene.getStylesheets().add("com/company/chess/pieces/assets/stylesheet.css");
 
         primaryStage.setTitle("Chess");
         primaryStage.setScene(scene);

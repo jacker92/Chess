@@ -59,13 +59,26 @@ public class ChessBoard extends GridPane {
             Piece piece = spaces[start.getX()][start.getY()].getPiece();
             if (piece.isLegalMove(move, board)) {
                 if ((game.isWhiteTurn() && piece.getAlliance() == Alliance.WHITE) || (!game.isWhiteTurn() && piece.getAlliance() == Alliance.BLACK)) {
-                    System.out.println("It is legal move.");
-                    if(board.blackIsChecked() || board.whiteIsChecked()) {
-                        new Alert(Alert.AlertType.ERROR).showAndWait();
+                  
+                  
+                    if(game.movePiece(move)) {
+                        movePiece(move);
+                          System.out.println("Piece moved.");
+                    } else {
+                        System.out.println("It is not legal move.");
                     }
-                     game.movePiece(move);
-                     movePiece(move);
-                     System.out.println("Piece moved.");
+                       if(board.IsChecked(Alliance.BLACK)) {
+                           if(board.IsCheckMated(Alliance.BLACK)) {
+                             new Alert(Alert.AlertType.INFORMATION, "Black is checkmated!").showAndWait(); 
+                             System.exit(0);
+                           }
+                      
+                    } else if (board.IsChecked(Alliance.WHITE)) {
+                        if (board.IsCheckMated(Alliance.WHITE)) {
+                             new Alert(Alert.AlertType.INFORMATION, "White is checkmated!").showAndWait(); 
+                             System.exit(0);
+                        }
+                    }
                 } 
                
             } else {

@@ -24,6 +24,7 @@ public class Bishop extends Piece {
         list = showMovesToTopRight(currentX, board, currentY, list);
 
         return list;
+        
     }
 
     private List<Move> showMovesToTopLeft(int currentX, Board board, int currentY, List<Move> list) {
@@ -34,7 +35,7 @@ public class Bishop extends Piece {
             if (board.getTiles()[currentX - i][currentY - i].getPiece() == null) {
                 list.add(new Move(this, new Position(currentX, currentY), new Position(currentX - i, currentY - i)));
             } else if (board.getTiles()[currentX-i][currentY-i].getPiece().getAlliance() != this.getAlliance()) {
-                list.add(new Move(this, new Position(currentX, currentY), new Position(currentX - 1, currentX - i)));
+                list.add(new Move(this, new Position(currentX, currentY), new Position(currentX - i, currentY - i)));
                 break;
             } else {
                 break;
