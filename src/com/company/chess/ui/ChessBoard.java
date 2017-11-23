@@ -25,7 +25,6 @@ public class ChessBoard extends BorderPane {
     private Label statusLabel;
     private HBox box;
     private GridPane pane;
-    
 
     public ChessBoard() {
 
@@ -33,7 +32,7 @@ public class ChessBoard extends BorderPane {
         this.turnLabel = new Label("Turn: White");
         this.statusLabel = new Label("Select piece to be moved");
         this.box = new HBox();
-        
+
         board = new Board();
         this.game = new Game(board);
 
@@ -65,44 +64,23 @@ public class ChessBoard extends BorderPane {
             statusLabel.setText("selected " + spaces[xVal][yVal].getPiece().getName());
             this.start = new Position(xVal, yVal);
             this.selected = true;
+            // Set red background to selected tile
+            spaces[xVal][yVal].getStyleClass().add("chess-space-active");
         } else {
-            Move move = new Move(spaces[start.getX()][start.getY()].getPiece(), start, new Position(xVal, yVal));
-            Piece piece = spaces[start.getX()][start.getY()].getPiece();
-            if (piece.isLegalMove(move, board)) {
-                System.out.println("legalize");
-                if ((game.isWhiteTurn() && piece.getAlliance() == Alliance.WHITE) || (!game.isWhiteTurn() && piece.getAlliance() == Alliance.BLACK)) {
-                  
-                    System.out.println("is legal move\n");
-                    if(game.movePiece(move, false)) {
-                        System.out.println("seleaösdklfjasödkflj");
-                        statusLabel.setText("Select piece to be moved");
-                        movePieceOnScreen(move);
-                        
-                        // Change label
-                        if(game.isWhiteTurn()) {
-                            turnLabel.setText("Turn: White");
-                        } else {
-                            turnLabel.setText("Turn: Black");
-                        }
-                    } 
-                    checkForCheckedAndMateOptions();
-                }   
-            } else {
-                System.out.println("is not legal move");
-            }
-             this.selected = false;
-             
+            // Remove red background
+            spaces[start.getX()][start.getY()].getStyleClass().remove("chess-space-active");
+            handleMoving(xVal, yVal);
         }
     }
 
     private void checkForCheckedAndMateOptions() {
-        if(board.IsChecked(Alliance.BLACK)) {
+        if (board.IsChecked(Alliance.BLACK)) {
             statusLabel.setText("Black is in check");
-            if(board.IsCheckMated(Alliance.BLACK)) {
+            if (board.IsCheckMated(Alliance.BLACK)) {
                 new Alert(Alert.AlertType.INFORMATION, "Black is checkmated!").showAndWait();
                 System.exit(0);
             }
-            
+
         } else if (board.IsChecked(Alliance.WHITE)) {
             statusLabel.setText("White is in check");
             if (board.IsCheckMated(Alliance.WHITE)) {
@@ -118,17 +96,15 @@ public class ChessBoard extends BorderPane {
                 spaces[x][y].setPiece(board.getTiles()[x][y].getPiece());
             }
         }
-        
+
         // Add Labels and gridpane to root
         this.setCenter(pane);
         box.getChildren().add(turnLabel);
         box.getChildren().add(statusLabel);
         box.setSpacing(20);
-        
         this.setTop(box);
     }
 
- 
     private void movePieceOnScreen(Move move) {
         // Remove piece from original position
         spaces[move.getStartPosition().getX()][move.getStartPosition().getY()].setPiece(null);
@@ -136,13 +112,37 @@ public class ChessBoard extends BorderPane {
         spaces[move.getEndPosition().getX()][move.getEndPosition().getY()].setPiece(move.getPiece());
         // Let's change piece's location information
         spaces[move.getEndPosition().getX()][move.getEndPosition().getY()].getPiece()
-        .setPosition(new Position(move.getEndPosition().getX(), move.getEndPosition().getY()));
-        
+                .setPosition(new Position(move.getEndPosition().getX(), move.getEndPosition().getY()));
+
         // If the piece is pawn, it has been moved, so have to set firstmoved to false
-        if(spaces[move.getEndPosition().getX()][move.getEndPosition().getY()].getPiece().getName() == PieceName.PAWN) {
-           Pawn pwn = (Pawn)spaces[move.getEndPosition().getX()][move.getEndPosition().getY()].getPiece();
-           pwn.setMoved(true);
-           spaces[move.getEndPosition().getX()][move.getEndPosition().getY()].setPiece(pwn);
+        if (spaces[move.getEndPosition().getX()][move.getEndPosition().getY()].getPiece().getName() == PieceName.PAWN) {
+            Pawn pwn = (Pawn) spaces[move.getEndPosition().getX()][move.getEndPosition().getY()].getPiece();
+            pwn.setMoved(true);
+            spaces[move.getEndPosition().getX()][move.getEndPosition().getY()].setPiece(pwn);
         }
     }
+
+    private void handleMoving(int xVal, int yVal) {
+        Move move = new Move(spaces[start.getX()][start.getY()].getPiece(), start, new Position(xVal, yVal));
+        Piece piece = spaces[start.getX()][start.getY()].getPiece();
+        if (piece.isLegalMove(move, board)) {
+            if ((game.isWhiteTurn() && piece.getAlliance() == Alliance.WHITE) || (!game.isWhiteTurn() && piece.getAlliance() == Alliance.BLACK)) {
+                if (game.movePiece(move, false)) {
+                    statusLabel.setText("Select piece to be moved");
+                    movePieceOnScreen(move);
+
+                    // Change label
+                    if (game.isWhiteTurn()) {
+                        turnLabel.setText("Turn: White");
+                    } else {
+                        turnLabel.setText("Turn: Black");
+                    }
+                }
+                checkForCheckedAndMateOptions();
+            }
+        }
+        this.selected = false;
+
+    }
+
 }

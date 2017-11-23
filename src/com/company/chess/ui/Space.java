@@ -4,7 +4,7 @@ import com.company.chess.pieces.Piece;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 
-public class Space extends Button{
+public class Space extends Button {
 
     private final int x;
     private final int y;

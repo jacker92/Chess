@@ -5,10 +5,6 @@ import com.company.chess.pieces.Alliance;
 import com.company.chess.pieces.Piece;
 import com.company.chess.pieces.PieceName;
 import com.company.chess.pieces.Position;
-import java.util.ArrayList;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class Board {
 
@@ -17,21 +13,6 @@ public class Board {
     public Board() {
         tiles = createBoard();
         tiles = GameInitializer.addPieces(tiles);
-    }
-
-    public List<Piece> getAllPieces() {
-        return getTilesAsList().stream().filter(n -> n.getPiece() == null)
-                .map(n -> n.getPiece()).collect(Collectors.toCollection(ArrayList::new));
-    }
-
-    public List<Tile> getTilesAsList() {
-        List<Tile> tilesAsList = new ArrayList<>();
-        for (Tile[] tile : tiles) {
-            for (Tile tile1 : tile) {
-                tilesAsList.add(tile1);
-            }
-        }
-        return tilesAsList;
     }
 
     private Tile[][] createBoard() {
