@@ -7,11 +7,8 @@ import java.util.List;
 
 public class Pawn extends Piece {
 
-    private boolean moved;
-
     public Pawn(int x, int y, Alliance alliance) {
         super(new Position(x, y), alliance, PieceName.PAWN);
-        this.moved = false;
     }
 
     @Override
@@ -89,14 +86,6 @@ public class Pawn extends Piece {
         }
 
         return list;
-    }
-
-    public boolean isMoved() {
-        return moved;
-    }
-
-    public void setMoved(boolean moved) {
-        this.moved = moved;
     }
 
 }

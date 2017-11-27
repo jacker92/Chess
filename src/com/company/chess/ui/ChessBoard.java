@@ -4,9 +4,7 @@ import com.company.chess.board.Board;
 import com.company.chess.board.Move;
 import com.company.chess.game.Game;
 import com.company.chess.pieces.Alliance;
-import com.company.chess.pieces.Pawn;
 import com.company.chess.pieces.Piece;
-import com.company.chess.pieces.PieceName;
 import com.company.chess.pieces.Position;
 import com.company.chess.pieces.Queen;
 import javafx.geometry.Pos;
@@ -113,6 +111,13 @@ public class ChessBoard extends BorderPane {
     }
 
     private void movePieceOnScreen(Move move) {
+        // Check if move is special move
+        System.out.println("on move piece on screen");
+        System.out.println(move);
+        if (move.isSpecialMove()) {
+            moveSpecialMoveOnScreen(move);
+        }
+
         // Remove piece from original position
         spaces[move.getStartPosition().getX()][move.getStartPosition().getY()].setPiece(null);
         // Set piece to new location
@@ -121,21 +126,26 @@ public class ChessBoard extends BorderPane {
         spaces[move.getEndPosition().getX()][move.getEndPosition().getY()].getPiece()
                 .setPosition(new Position(move.getEndPosition().getX(), move.getEndPosition().getY()));
 
-        // If the piece is pawn, it has been moved, so have to set firstmoved to false
-        if (spaces[move.getEndPosition().getX()][move.getEndPosition().getY()].getPiece().getName() == PieceName.PAWN) {
-            Pawn pwn = (Pawn) spaces[move.getEndPosition().getX()][move.getEndPosition().getY()].getPiece();
-            pwn.setMoved(true);
-            spaces[move.getEndPosition().getX()][move.getEndPosition().getY()].setPiece(pwn);
-        }
+        // Set the piece that it is moved
+        Piece piece = spaces[move.getEndPosition().getX()][move.getEndPosition().getY()].getPiece();
+        piece.setMoved(true);
+        spaces[move.getEndPosition().getX()][move.getEndPosition().getY()].setPiece(piece);
     }
 
     private void handleMoving(int xVal, int yVal) {
+
         Move move = new Move(spaces[start.getX()][start.getY()].getPiece(), start, new Position(xVal, yVal));
         Piece piece = spaces[start.getX()][start.getY()].getPiece();
+        System.out.println(move);
         if (piece.isLegalMove(move, board)) {
+            // If it is special move
+            if (piece.isSpecialMove(move, board)) {
+                move.setSpecialMove(true);
+            }
             if ((game.isWhiteTurn() && piece.getAlliance() == Alliance.WHITE) || (!game.isWhiteTurn() && piece.getAlliance() == Alliance.BLACK)) {
                 if (game.movePiece(move, false)) {
                     statusLabel.setText("Select piece to be moved");
+
                     movePieceOnScreen(move);
 
                     // Change label
@@ -144,9 +154,7 @@ public class ChessBoard extends BorderPane {
                     } else {
                         turnLabel.setText("Turn: Black");
                     }
-                    
                     checkPawnPromotion();
-   
                 }
                 checkForCheckedAndMateOptions();
             }
@@ -160,8 +168,34 @@ public class ChessBoard extends BorderPane {
         if (game.isPawnIsPromotionable()) {
             int x = game.getPawnPosition().getX();
             int y = game.getPawnPosition().getY();
-            spaces[x][y].setPiece(new Queen(x,y, game.getPawnAlliance()));
+            spaces[x][y].setPiece(new Queen(x, y, game.getPawnAlliance()));
             game.setPawnIsPromotionable(false);
+        }
+    }
+
+    private void moveSpecialMoveOnScreen(Move move) {
+        // Handle castling moves
+        // Long castle
+        if (move.getEndPosition().getX() == 2) {
+            Piece piece = spaces[0][move.getStartPosition().getY()].getPiece();
+            // Set piece to new location
+            spaces[3][move.getEndPosition().getY()].setPiece(piece);
+            // Let's change piece's location information
+            spaces[3][move.getEndPosition().getY()].getPiece()
+                    .setPosition(new Position(3, move.getEndPosition().getY()));
+            // Remove piece from original position
+            spaces[0][move.getStartPosition().getY()].setPiece(null);
+
+            // short castle
+        } else if (move.getEndPosition().getX() == 6) {
+            Piece piece = spaces[7][move.getStartPosition().getY()].getPiece();
+            // Set piece to new location
+            spaces[5][move.getEndPosition().getY()].setPiece(piece);
+            // Let's change piece's location information
+            spaces[5][move.getEndPosition().getY()].getPiece()
+                    .setPosition(new Position(5, move.getEndPosition().getY()));
+            // Remove piece from original position
+            spaces[7][move.getStartPosition().getY()].setPiece(null);
         }
     }
 }

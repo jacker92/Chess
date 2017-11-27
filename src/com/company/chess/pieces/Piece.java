@@ -12,6 +12,7 @@ public abstract class Piece {
     protected PieceName name;
     protected Board board;
     protected Image image;
+    protected boolean moved;
 
     public Piece(Position position, Alliance alliance, PieceName name) {
         this.position = position;
@@ -20,6 +21,7 @@ public abstract class Piece {
         String url = "com/company/chess/pieces/assets/"
                 + this.alliance.toString().toLowerCase() + "_" + name.toString().toLowerCase() + ".png";
         this.image = new Image(url);
+        this.moved = false;
     }
 
     public Position getPosition() {
@@ -60,10 +62,24 @@ public abstract class Piece {
         }
         return false;
     }
+    
+    public boolean isSpecialMove(Move move, Board board) {
+        for(Move xmove : showAllAvailableMoves(board)) {
+            if (xmove.equals(move) && xmove.isSpecialMove()) return true;   
+        }
+    return false;
+    }
 
     public void setPosition(Position position) {
         this.position = position;
     }
-    
-    
+
+    public boolean isMoved() {
+        return moved;
+    }
+
+    public void setMoved(boolean moved) {
+        this.moved = moved;
+    }
+
 }

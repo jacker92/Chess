@@ -37,6 +37,7 @@ public class Game {
     }
 
     public boolean movePiece(Move move, boolean testing) {
+        // If testing is true, it is not executing moves, only checking if it is check or checkmate
         if (move.executeMove(board, whiteTurn, testing)) {
             checkPawnPromotion(move);
             whiteTurn = !whiteTurn;

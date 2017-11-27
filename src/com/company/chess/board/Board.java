@@ -9,6 +9,7 @@ import com.company.chess.pieces.Position;
 public class Board {
 
     Tile[][] tiles;
+    private boolean boardIsChecked;
 
     public Board() {
         tiles = createBoard();
@@ -59,11 +60,13 @@ public class Board {
                 }
                 for (Move move : piece.showAllAvailableMoves(this)) {
                     if (move.getEndPosition().equals(king)) {
+                        boardIsChecked = true;
                         return true;
                     }
                 }
             }
         }
+        boardIsChecked = false;
         return false;
     }
 
@@ -89,4 +92,14 @@ public class Board {
         }
         return true;
     }
+
+    public boolean isBoardIsChecked() {
+        return boardIsChecked;
+    }
+
+    public void setBoardIsChecked(boolean boardIsChecked) {
+        this.boardIsChecked = boardIsChecked;
+    }
+    
+    
 }

@@ -11,12 +11,23 @@ public class Move {
     private Piece piece;
     private Position endPosition;
     private Position startPosition;
+    private boolean specialMove;
 
     public Move(Piece piece, Position startPosition, Position endPosition) {
         this.piece = piece;
         this.endPosition = endPosition;
         this.startPosition = startPosition;
     }
+
+    // Constructor for special move (Castling)
+    public Move(Piece piece, Position startPosition, Position endPosition, boolean specialMove) {
+        this.piece = piece;
+        this.startPosition = startPosition;
+        this.endPosition = endPosition;
+        this.specialMove = specialMove;
+    }
+    
+    
 
     public boolean executeMove(Board board, boolean whiteTurn, boolean testing) {
         if (whiteTurn) {
@@ -60,7 +71,7 @@ public class Move {
     }
 
     public String toString() {
-        return piece.getName() + ", " + startPosition + ", " + endPosition;
+        return piece.getName() + ", " + startPosition + ", " + endPosition + " " +  specialMove;
     }
 
     public Move setPieceName(PieceName name) {
@@ -85,6 +96,14 @@ public class Move {
         return startPosition;
     }
 
+    public boolean isSpecialMove() {
+        return specialMove;
+    }
+
+    public void setSpecialMove(boolean specialMove) {
+        this.specialMove = specialMove;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 3;
