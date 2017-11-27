@@ -8,6 +8,7 @@ import com.company.chess.pieces.Pawn;
 import com.company.chess.pieces.Piece;
 import com.company.chess.pieces.PieceName;
 import com.company.chess.pieces.Position;
+import com.company.chess.pieces.Queen;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -143,11 +144,24 @@ public class ChessBoard extends BorderPane {
                     } else {
                         turnLabel.setText("Turn: Black");
                     }
+                    
+                    checkPawnPromotion();
+   
                 }
                 checkForCheckedAndMateOptions();
             }
         }
         this.selected = false;
 
+    }
+
+    private void checkPawnPromotion() {
+        // Check if pawn is at end at top or bottom, then promote it to queen
+        if (game.isPawnIsPromotionable()) {
+            int x = game.getPawnPosition().getX();
+            int y = game.getPawnPosition().getY();
+            spaces[x][y].setPiece(new Queen(x,y, game.getPawnAlliance()));
+            game.setPawnIsPromotionable(false);
+        }
     }
 }
