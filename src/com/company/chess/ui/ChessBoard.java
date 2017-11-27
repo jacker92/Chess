@@ -8,7 +8,9 @@ import com.company.chess.pieces.Pawn;
 import com.company.chess.pieces.Piece;
 import com.company.chess.pieces.PieceName;
 import com.company.chess.pieces.Position;
+import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -25,6 +27,7 @@ public class ChessBoard extends BorderPane {
     private Label statusLabel;
     private HBox box;
     private GridPane pane;
+    public Button newGameButton = new Button();
 
     public ChessBoard() {
 
@@ -32,6 +35,7 @@ public class ChessBoard extends BorderPane {
         this.turnLabel = new Label("Turn: White");
         this.statusLabel = new Label("Select piece to be moved");
         this.box = new HBox();
+        this.newGameButton = new Button("New Game");
 
         board = new Board();
         this.game = new Game(board);
@@ -101,7 +105,9 @@ public class ChessBoard extends BorderPane {
         this.setCenter(pane);
         box.getChildren().add(turnLabel);
         box.getChildren().add(statusLabel);
+        box.getChildren().add(newGameButton);
         box.setSpacing(20);
+        box.setAlignment(Pos.CENTER);
         this.setTop(box);
     }
 
@@ -144,5 +150,4 @@ public class ChessBoard extends BorderPane {
         this.selected = false;
 
     }
-
 }

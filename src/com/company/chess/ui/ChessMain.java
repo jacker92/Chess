@@ -1,18 +1,29 @@
 package com.company.chess.ui;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class ChessMain extends Application {
-  
+
+    private ChessBoard board;
+    private Scene scene;
+
     @Override
     public void start(Stage primaryStage) {
 
-        BorderPane root = new ChessBoard();
+        this.board = new ChessBoard();
+        BorderPane root = board;
 
-        Scene scene = new Scene(root, 400, 420);
+        // This restarts application
+        board.newGameButton.setOnAction(event -> {
+            primaryStage.close();
+            Platform.runLater(() -> new ChessMain().start(new Stage()));
+        });
+
+        scene = new Scene(root, 400, 420);
         scene.getStylesheets().add("com/company/chess/pieces/assets/stylesheet.css");
 
         primaryStage.setTitle("Chess");
@@ -27,6 +38,4 @@ public class ChessMain extends Application {
         launch(args);
     }
 
- 
-    
 }
