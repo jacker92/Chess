@@ -96,6 +96,7 @@ public class ChessBoard extends BorderPane {
     public void onStart() {
         for (int x = 0; x < 8; x++) {
             for (int y = 0; y < 8; y++) {
+                // Get correct pieces from Tile-array
                 spaces[x][y].setPiece(board.getTiles()[x][y].getPiece());
             }
         }
@@ -112,12 +113,9 @@ public class ChessBoard extends BorderPane {
 
     private void movePieceOnScreen(Move move) {
         // Check if move is special move
-        System.out.println("on move piece on screen");
-        System.out.println(move);
         if (move.isSpecialMove()) {
             moveSpecialMoveOnScreen(move);
         }
-
         // Remove piece from original position
         spaces[move.getStartPosition().getX()][move.getStartPosition().getY()].setPiece(null);
         // Set piece to new location
@@ -136,7 +134,6 @@ public class ChessBoard extends BorderPane {
 
         Move move = new Move(spaces[start.getX()][start.getY()].getPiece(), start, new Position(xVal, yVal));
         Piece piece = spaces[start.getX()][start.getY()].getPiece();
-        System.out.println(move);
         if (piece.isLegalMove(move, board)) {
             // If it is special move
             if (piece.isSpecialMove(move, board)) {
@@ -197,5 +194,8 @@ public class ChessBoard extends BorderPane {
             // Remove piece from original position
             spaces[7][move.getStartPosition().getY()].setPiece(null);
         }
+        
+       // Move piece on tiles-board
+       move.moveSpecialMove(board);
     }
 }

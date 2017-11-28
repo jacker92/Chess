@@ -59,6 +59,8 @@ public class Board {
                     continue;
                 }
                 for (Move move : piece.showAllAvailableMoves(this)) {
+                    // For every piece, check for its every move, and if some move
+                    // has king in its end position, it is check
                     if (move.getEndPosition().equals(king)) {
                         boardIsChecked = true;
                         return true;
@@ -71,6 +73,8 @@ public class Board {
     }
 
     public boolean IsCheckMated(Alliance alliance) {
+        
+        // Go through whole board and check all the pieces
         for (int x = 0; x < 8; x++) {
             for (int y = 0; y < 8; y++) {
                 Piece piece = tiles[x][y].getPiece();
@@ -83,6 +87,8 @@ public class Board {
                 for (Move move : piece.showAllAvailableMoves(this)) {
                     boolean whiteTurn = true;
                     if(alliance == Alliance.BLACK) whiteTurn = false;
+                    // If chosen color can move piece, and after moving it is not check anymore,
+                    // then return false
                     if (move.executeMove(this, whiteTurn, true)) {
                         return false;
                     }
@@ -90,6 +96,7 @@ public class Board {
             }
 
         }
+        
         return true;
     }
 

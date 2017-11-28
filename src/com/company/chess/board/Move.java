@@ -26,8 +26,6 @@ public class Move {
         this.endPosition = endPosition;
         this.specialMove = specialMove;
     }
-    
-    
 
     public boolean executeMove(Board board, boolean whiteTurn, boolean testing) {
         if (whiteTurn) {
@@ -70,8 +68,35 @@ public class Move {
         return true;
     }
 
+    public void moveSpecialMove(Board board) {
+
+        // Handle castling moves
+        // Long castle
+        if (getEndPosition().getX() == 2) {
+            Piece piece = board.getTiles()[0][getStartPosition().getY()].getPiece();
+            // Set piece to new location
+            board.getTiles()[3][getEndPosition().getY()].setPiece(piece);
+            // Let's change piece's location information
+            board.getTiles()[3][getEndPosition().getY()].getPiece()
+                    .setPosition(new Position(3, getEndPosition().getY()));
+            // Remove piece from original position
+            board.getTiles()[0][getStartPosition().getY()].setPiece(null);
+
+            // short castle
+        } else if (getEndPosition().getX() == 6) {
+            Piece piece = board.getTiles()[7][getStartPosition().getY()].getPiece();
+            // Set piece to new location
+            board.getTiles()[5][getEndPosition().getY()].setPiece(piece);
+            // Let's change piece's location information
+            board.getTiles()[5][getEndPosition().getY()].getPiece()
+                    .setPosition(new Position(5, getEndPosition().getY()));
+            // Remove piece from original position
+            board.getTiles()[7][getStartPosition().getY()].setPiece(null);
+        }
+    }
+
     public String toString() {
-        return piece.getName() + ", " + startPosition + ", " + endPosition + " " +  specialMove;
+        return piece.getName() + ", " + startPosition + ", " + endPosition + " " + specialMove;
     }
 
     public Move setPieceName(PieceName name) {
@@ -103,7 +128,7 @@ public class Move {
     public void setSpecialMove(boolean specialMove) {
         this.specialMove = specialMove;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 3;
